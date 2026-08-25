@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "run-dev": "tsx server.ts"
+    "start": "tsx watch src/main/server.ts",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
