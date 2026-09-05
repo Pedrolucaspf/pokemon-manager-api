@@ -81,27 +81,7 @@ app.get('/api/v1/pokemons/stats', (req:Request, res: Response) => {
 
     return res.status(200).json({
         "totalPokemons": totalPokemons,
-        "typesCount": typesCountObj /*{
-            "Normal": typeCounts[0],
-            "Grass": typeCounts[1],
-            "Fire": typeCounts[2],
-            "Water": typeCounts[3],
-            "Electric": typeCounts[4],
-            "Ice": typeCounts[5],
-            "Fighting": typeCounts[6],
-            "Ground": typeCounts[7],
-            "Poison": typeCounts[8],
-            "Flying": typeCounts[9],
-            "Psychic": typeCounts[10],
-            "Bug": typeCounts[11],
-            "Rock": typeCounts[12],
-            "Ghost": typeCounts[13],
-            "Dragon": typeCounts[14],
-            "Dark": typeCounts[15],
-            "Steel": typeCounts[16],
-            "Fairy": typeCounts[17],
-            "Undetermined": typeCounts[18]
-        }*/
+        "typesCount": typesCountObj
     });
 });
 
