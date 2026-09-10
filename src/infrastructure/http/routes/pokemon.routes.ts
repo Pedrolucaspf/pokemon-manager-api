@@ -9,6 +9,14 @@ pokemonRoutes.get('/', (req, res) => {
     #swagger.tags = ['Pokemons']
     #swagger.summary = 'Lista todos os pokemons'
     #swagger.description = 'Endpoint para listar pokemons cadastrados.'
+
+    #swagger.parameters['type'] = {
+      in: 'query',
+      description: 'Busca os pokemons pelo tipo (opcional)',
+      required: false,
+      type: 'string'
+    }
+
     #swagger.responses[200] = {
       description: 'Lista de pokemons retornada com sucesso.',
       content: {

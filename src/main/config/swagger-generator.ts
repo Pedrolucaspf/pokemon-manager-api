@@ -9,7 +9,7 @@ const doc = {
       'API de exemplo desenvolvida para a disciplina Tópicos Especiais em Engenharia de Software (UFF)',
   },
   host: 'localhost:3333',
-  basePath: '/',
+  basePath: '/api/v1/pokemons',
   schemes: ['http'],
   consumes: ['application/json'],
   produces: ['application/json'],
