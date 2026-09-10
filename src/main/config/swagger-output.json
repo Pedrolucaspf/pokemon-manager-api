@@ -1,0 +1,315 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Express Sample API",
+    "description": "API de exemplo desenvolvida para a disciplina Tópicos Especiais em Engenharia de Software (UFF)"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3333/api/v1/pokemons"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Pokemons",
+      "description": "Endpoints de gerenciamento de pokemons"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "tags": [
+          "Pokemons"
+        ],
+        "summary": "Lista todos os pokemons",
+        "description": "Endpoint para listar pokemons cadastrados.",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Busca os pokemons pelo tipo (opcional)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de pokemons retornada com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Pokemon"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Pokemons"
+        ],
+        "summary": "Cria um novo pokemon",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Pokemon criado com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Pokemon criado com sucesso!"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Pokemon"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Regra de negócio violada (ex: Dados faltando).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePokemonDto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{id}": {
+      "get": {
+        "tags": [
+          "Pokemons"
+        ],
+        "summary": "Busca pokemon por id",
+        "description": "Endpoint para buscar pokemon cadastrado a partir de seu id.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pokemon retornado com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Pokemon"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Pokemons"
+        ],
+        "summary": "Atualiza pokemon",
+        "description": "Endpoint para atualizar pokemon cadastrado anteriormente a partir do seu id.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pokemon atualizado com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Pokemon"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Pokemons"
+        ],
+        "summary": "Deleta pokemon",
+        "description": "Endpoint para deletar registro de pokemon da base de dados.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pokemon deletado com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Pokemon"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Pokemon": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 55
+          },
+          "name": {
+            "type": "string",
+            "example": "Scyther"
+          },
+          "type": {
+            "type": "string",
+            "example": "Bug"
+          },
+          "rarity": {
+            "type": "string",
+            "example": "Rare"
+          },
+          "stats": {
+            "type": "object",
+            "properties": {
+              "attack": {
+                "type": "number",
+                "example": 60
+              },
+              "defense": {
+                "type": "number",
+                "example": 40
+              },
+              "hp": {
+                "type": "number",
+                "example": 70
+              }
+            }
+          },
+          "nickname": {
+            "type": "string",
+            "example": "Raiden"
+          }
+        }
+      },
+      "CreatePokemonDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "55"
+          },
+          "name": {
+            "type": "string",
+            "example": "Scyther"
+          },
+          "type": {
+            "type": "string",
+            "example": "Bug"
+          },
+          "rarity": {
+            "type": "string",
+            "example": "Rare"
+          },
+          "attack": {
+            "type": "string",
+            "example": "60"
+          },
+          "defense": {
+            "type": "string",
+            "example": "40"
+          },
+          "hp": {
+            "type": "string",
+            "example": "70"
+          },
+          "nickname": {
+            "type": "string",
+            "example": "Raiden"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "type",
+          "rarity",
+          "attack",
+          "defense",
+          "hp",
+          "nickname"
+        ]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "Tipo inválido."
+          }
+        }
+      }
+    }
+  }
+}
