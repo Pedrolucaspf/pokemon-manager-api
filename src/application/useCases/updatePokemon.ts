@@ -41,12 +41,19 @@ export class UpdatePokemonUseCase {
       if (!type) {
         enum_type = pokemon.type;
       } else {
+        if (!Object.values(pokemonType).includes(type as pokemonType)) {
+          throw new AppError('Tipo inserido inválido.', 400);
+        }
+
         enum_type = type as pokemonType;
       }
 
       if (!rarity) {
         enum_rarity = pokemon.rarity;
       } else {
+        if (!Object.values(Rarity).includes(rarity as Rarity)) {
+          throw new AppError('Raridade inserida inválida.', 400);
+        }
         enum_rarity = rarity as Rarity;
       }
 
@@ -54,18 +61,27 @@ export class UpdatePokemonUseCase {
         num_attack = pokemon.attack;
       } else {
         num_attack = Number(attack);
+        if (isNaN(num_attack)) {
+          throw new AppError('Valor de ataque deve ser numérico.', 400);
+        }
       }
 
       if (!defense) {
         num_defense = pokemon.defense;
       } else {
         num_defense = Number(defense);
+        if (isNaN(num_defense)) {
+          throw new AppError('Valor de defesa deve ser numérico.', 400);
+        }
       }
 
       if (!hp) {
         num_hp = pokemon.hp;
       } else {
         num_hp = Number(hp);
+        if (isNaN(num_hp)) {
+          throw new AppError('Valor de HP deve ser numérico.', 400);
+        }
       }
 
       if (!nickname) {

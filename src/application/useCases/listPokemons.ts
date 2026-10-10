@@ -4,7 +4,7 @@ import { IPokemonRepository } from '@domain/repositories/pokemon.repository';
 export class ListPokemonsUseCase {
   constructor(private pokemonRepository: IPokemonRepository) {}
 
-  async execute(type?: string): Promise<Pokemon[] | null> {
+  async execute(type?: string): Promise<Pokemon[]> {
     if (type) {
       return await this.pokemonRepository.findByType(type);
     }
