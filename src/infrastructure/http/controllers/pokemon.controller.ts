@@ -14,13 +14,26 @@ export class PokemonController {
     private deletePokemonUseCase: DeletePokemonUseCase,
   ) {}
   async create(req: Request, res: Response): Promise<Response> {
-    const { id, name, type, rarity, attack, defense, hp, nickname } = req.body;
+    const {
+      id,
+      name,
+      type1,
+      type2,
+      rarity,
+      level,
+      attack,
+      defense,
+      hp,
+      nickname,
+    } = req.body;
     const pokemon = await this.createPokemonUseCase.execute({
       id,
       name,
-      type,
+      type1,
+      type2,
       rarity,
       attack,
+      level,
       defense,
       hp,
       nickname,
@@ -34,12 +47,15 @@ export class PokemonController {
 
   async update(req: Request, res: Response): Promise<Response> {
     const { id } = req.params;
-    const { name, type, rarity, attack, defense, hp, nickname } = req.body;
+    const { name, type1, type2, rarity, level, attack, defense, hp, nickname } =
+      req.body;
     const pokemon = await this.updatePokemonUseCase.execute(
       String(id),
       name,
-      type,
+      type1,
+      type2,
       rarity,
+      level,
       attack,
       defense,
       hp,
@@ -70,8 +86,10 @@ export class PokemonController {
     const formattedPokemons = pokemons.map((pokemon) => ({
       id: pokemon.id,
       name: pokemon.name,
-      type: pokemon.type,
+      type1: pokemon.type1,
+      type2: pokemon.type2,
       rarity: pokemon.rarity,
+      level: pokemon.level,
       attack: pokemon.attack,
       defense: pokemon.defense,
       hp: pokemon.hp,
