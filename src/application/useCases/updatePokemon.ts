@@ -8,8 +8,10 @@ export class UpdatePokemonUseCase {
   async execute(
     id: string,
     name?: string,
-    type?: string,
+    type1?: string,
+    type2?: string,
     rarity?: string,
+    level?: string,
     attack?: string,
     defense?: string,
     hp?: string,
@@ -22,13 +24,24 @@ export class UpdatePokemonUseCase {
       throw new AppError('Pokemon não encontrado no catálogo.', 404);
     }
 
-    let enum_type;
+    let enum_type1;
+    let enum_type2;
     let enum_rarity;
+    let num_level;
     let num_attack;
     let num_defense;
     let num_hp;
 
-    if (!name && !type && !rarity && !attack && !defense && !hp) {
+    if (
+      !name &&
+      !type1 &&
+      !type2 &&
+      !rarity &&
+      !level &&
+      !attack &&
+      !defense &&
+      !hp
+    ) {
       throw new AppError(
         'Atualização vazia: novo name/type/rarity/attack/defense/hp deve ser inserido.',
         4000,
@@ -38,14 +51,24 @@ export class UpdatePokemonUseCase {
         name = pokemon.name;
       }
 
-      if (!type) {
-        enum_type = pokemon.type;
+      if (!type1) {
+        enum_type1 = pokemon.type1;
       } else {
-        if (!Object.values(pokemonType).includes(type as pokemonType)) {
-          throw new AppError('Tipo inserido inválido.', 400);
+        if (!Object.values(pokemonType).includes(type1 as pokemonType)) {
+          throw new AppError('Tipo 1 inserido inválido.', 400);
         }
 
-        enum_type = type as pokemonType;
+        enum_type1 = type1 as pokemonType;
+      }
+
+      if (!type2) {
+        enum_type2 = pokemon.type2;
+      } else {
+        if (!Object.values(pokemonType).includes(type2 as pokemonType)) {
+          throw new AppError('Tipo 2 inserido inválido.', 400);
+        }
+
+        enum_type2 = type2 as pokemonType;
       }
 
       if (!rarity) {
@@ -55,6 +78,15 @@ export class UpdatePokemonUseCase {
           throw new AppError('Raridade inserida inválida.', 400);
         }
         enum_rarity = rarity as Rarity;
+      }
+
+      if (!level) {
+        num_level = pokemon.level;
+      } else {
+        num_level = Number(level);
+        if (isNaN(num_level)) {
+          throw new AppError('Valor de nível deve ser numérico.', 400);
+        }
       }
 
       if (!attack) {
@@ -92,8 +124,10 @@ export class UpdatePokemonUseCase {
     const newPokemon = new Pokemon({
       id: num_id,
       name: name,
-      type: enum_type,
+      type1: enum_type1,
+      type2: enum_type2,
       rarity: enum_rarity,
+      level: num_level,
       stats: {
         attack: Number(num_attack),
         defense: Number(num_defense),

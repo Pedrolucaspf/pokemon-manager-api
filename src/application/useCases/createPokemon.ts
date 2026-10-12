@@ -5,8 +5,10 @@ import { AppError } from '@domain/errors/app.error';
 interface CreatePokemonDTO {
   id: string;
   name: string;
-  type: string;
+  type1: string;
+  type2: string;
   rarity: string;
+  level: string;
   attack: string;
   defense: string;
   hp: string;
@@ -24,17 +26,30 @@ export class CreatePokemonUseCase {
       throw new AppError('Pokemon com este id já está cadastrado.', 400);
     }
 
-    if (!Object.values(pokemonType).includes(data.type as pokemonType)) {
-      throw new AppError('Tipo inserido inválido.', 400);
+    if (!Object.values(pokemonType).includes(data.type1 as pokemonType)) {
+      throw new AppError('Tipo 1 inserido inválido.', 400);
     }
 
-    const enum_type = data.type as pokemonType;
+    const enum_type1 = data.type1 as pokemonType;
+
+    let enum_type2;
+    if (data.type2 != null) {
+      if (!Object.values(pokemonType).includes(data.type2 as pokemonType)) {
+        throw new AppError('Tipo 2 inserido inválido.', 400);
+      }
+      enum_type2 = data.type2 as pokemonType;
+    }
 
     if (!Object.values(Rarity).includes(data.rarity as Rarity)) {
       throw new AppError('Raridade inserida inválida.', 400);
     }
 
     const enum_rarity = data.rarity as Rarity;
+
+    const num_level = Number(data.level);
+    if (isNaN(num_level)) {
+      throw new AppError('Valor de nível deve ser numérico.', 400);
+    }
 
     const num_attack = Number(data.attack);
     if (isNaN(num_attack)) {
@@ -51,34 +66,20 @@ export class CreatePokemonUseCase {
       throw new AppError('Valor de HP deve ser numérico.', 400);
     }
 
-    let newPokemon: Pokemon;
-
-    if (data.nickname) {
-      newPokemon = new Pokemon({
-        id: id,
-        name: data.name,
-        type: enum_type,
-        rarity: enum_rarity,
-        stats: {
-          attack: num_attack,
-          defense: num_defense,
-          hp: num_hp,
-        },
-        nickname: data.nickname,
-      });
-    } else {
-      newPokemon = new Pokemon({
-        id: id,
-        name: data.name,
-        type: enum_type,
-        rarity: enum_rarity,
-        stats: {
-          attack: num_attack,
-          defense: num_defense,
-          hp: num_hp,
-        },
-      });
-    }
+    const newPokemon = new Pokemon({
+      id: id,
+      name: data.name,
+      type1: enum_type1,
+      type2: enum_type2,
+      rarity: enum_rarity,
+      level: num_level,
+      stats: {
+        attack: num_attack,
+        defense: num_defense,
+        hp: num_hp,
+      },
+      nickname: data.nickname,
+    });
 
     await this.PokemonRepository.create(newPokemon);
     return newPokemon;
