@@ -76,9 +76,16 @@ export class PokemonController {
 
   async list(req: Request, res: Response): Promise<Response> {
     const type = req.query.type as string;
+    const name = req.query.search as string;
     let pokemons;
     if (type) {
-      pokemons = await this.listPokemonsUseCase.execute(type);
+      if (name) {
+        pokemons = await this.listPokemonsUseCase.execute(name, type);
+      } else {
+        pokemons = await this.listPokemonsUseCase.execute(undefined, type);
+      }
+    } else if (name) {
+      pokemons = await this.listPokemonsUseCase.execute(name);
     } else {
       pokemons = await this.listPokemonsUseCase.execute();
     }

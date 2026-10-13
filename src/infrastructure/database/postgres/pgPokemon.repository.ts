@@ -25,7 +25,7 @@ export class PgPokemonRepository implements IPokemonRepository {
 
   async update(pokemon: Pokemon): Promise<void> {
     const query = `
-      UPDATE pokemons SET name = $2, type1 = $3, type2 = $4, rarity = $5, level = $6, attack = $7, defense = $8, hp = $9, nickname = $10)
+      UPDATE pokemons SET name = $2, type1 = $3, type2 = $4, rarity = $5, level = $6, attack = $7, defense = $8, hp = $9, nickname = $10
       WHERE id = $1
     `;
     await postgresPool.query(query, [
@@ -116,5 +116,51 @@ export class PgPokemonRepository implements IPokemonRepository {
       },
       nickname: row.nickname,
     });
+  }
+
+  async searchByName(name: string): Promise<Pokemon[]> {
+    const query = `SELECT * FROM pokemons WHERE name ILIKE $1`;
+    const result = await postgresPool.query(query, [`%${name}%`]);
+
+    return result.rows.map(
+      (row) =>
+        new Pokemon({
+          id: row.id,
+          name: row.name,
+          type1: row.type1,
+          type2: row.type2,
+          rarity: row.rarity,
+          level: row.rarity,
+          stats: {
+            attack: row.attack,
+            defense: row.defense,
+            hp: row.hp,
+          },
+          nickname: row.nickname,
+        }),
+    );
+  }
+
+  async searchByNameAndType(name: string, type: string): Promise<Pokemon[]> {
+    const query = `SELECT * FROM pokemons WHERE name ILIKE $1 AND (type1 = $2 OR type2 = $2)`;
+    const result = await postgresPool.query(query, [`%${name}%`, type]);
+
+    return result.rows.map(
+      (row) =>
+        new Pokemon({
+          id: row.id,
+          name: row.name,
+          type1: row.type1,
+          type2: row.type2,
+          rarity: row.rarity,
+          level: row.rarity,
+          stats: {
+            attack: row.attack,
+            defense: row.defense,
+            hp: row.hp,
+          },
+          nickname: row.nickname,
+        }),
+    );
   }
 }

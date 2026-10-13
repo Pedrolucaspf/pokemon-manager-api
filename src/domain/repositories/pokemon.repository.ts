@@ -7,4 +7,6 @@ export interface IPokemonRepository {
   findByType(type: string): Promise<Pokemon[]>;
   findById(id: number): Promise<Pokemon | null>;
   findAll(): Promise<Pokemon[]>;
+  searchByName(name: string): Promise<Pokemon[]>;
+  searchByNameAndType(name: string, type: string): Promise<Pokemon[]>;
 }
