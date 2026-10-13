@@ -3,6 +3,7 @@ import { IPokemonRepository } from '@domain/repositories/pokemon.repository';
 import { ITrainerRepository } from '@domain/repositories/trainer.repository';
 import { NotFoundError } from '@domain/errors/not-found-error';
 import { BadRequestError } from '@domain/errors/bad-request-error';
+import { ConflictError } from '@domain/errors/conflict-error';
 import { UnprocessableError } from '@domain/errors/unprocessable-error';
 
 export class UpdatePokemonUseCase {
@@ -135,6 +136,14 @@ export class UpdatePokemonUseCase {
 
         if (!TrainerExists) {
           throw new NotFoundError('Treinador.');
+        } else {
+          const numPokemonsDoTreinador =
+            await this.PokemonRepository.countPokemonsByTrainer(trainerId);
+          if (numPokemonsDoTreinador >= 6) {
+            throw new ConflictError(
+              'Treinador já alcançou o limite máximo de 6 pokemons. Não é possível adicionar mais.',
+            );
+          }
         }
       }
     }

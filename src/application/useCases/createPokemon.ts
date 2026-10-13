@@ -80,6 +80,14 @@ export class CreatePokemonUseCase {
 
       if (!TrainerExists) {
         throw new NotFoundError('Treinador');
+      } else {
+        const numPokemonsDoTreinador =
+          await this.PokemonRepository.countPokemonsByTrainer(data.trainerId);
+        if (numPokemonsDoTreinador >= 6) {
+          throw new ConflictError(
+            'Treinador já alcançou o limite máximo de 6 pokemons. Não é possível adicionar mais.',
+          );
+        }
       }
     }
 
@@ -96,6 +104,7 @@ export class CreatePokemonUseCase {
         hp: num_hp,
       },
       nickname: data.nickname,
+      trainerId: data.trainerId,
     });
 
     await this.PokemonRepository.create(newPokemon);

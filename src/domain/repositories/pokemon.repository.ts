@@ -9,4 +9,5 @@ export interface IPokemonRepository {
   findAll(): Promise<Pokemon[]>;
   searchByName(name: string): Promise<Pokemon[]>;
   searchByNameAndType(name: string, type: string): Promise<Pokemon[]>;
+  countPokemonsByTrainer(trainerId: string): Promise<number>;
 }

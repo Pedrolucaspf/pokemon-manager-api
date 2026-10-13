@@ -188,4 +188,13 @@ export class PrismaPokemonRepository implements IPokemonRepository {
         }),
     );
   }
+
+  async countPokemonsByTrainer(trainerId: string): Promise<number> {
+    const numPokemons: number = await prisma.pokemon.count({
+      where: {
+        trainerId: trainerId,
+      },
+    });
+    return numPokemons;
+  }
 }
