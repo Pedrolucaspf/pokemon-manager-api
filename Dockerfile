@@ -14,6 +14,12 @@ RUN npm ci
 # Copia o código-fonte e configurações
 COPY . .
 
+#URL Padrão para a geração do Prisma Client
+ENV DATABASE_URL="postgresql://manager:password@localhost:5432/manager_db?schema=public"
+
+# Gera client do Prisma
+RUN npx prisma generate
+
 # Gera os arquivos compilados em JavaScript na pasta /dist
 RUN npm run build
 
@@ -37,6 +43,13 @@ RUN npm ci --only=production
 
 # Copia a pasta /dist gerada no estágio de build
 COPY --from=builder /usr/src/app/dist ./dist
+
+# Copia o schema do Prisma
+COPY --from=builder /usr/src/app/prisma ./prisma
+
+# Copia o client do Prisma
+COPY --from=builder /usr/src/app/generated ./generated
+COPY --from=builder /usr/src/app/node_modules/.prisma ./node_modules/.prisma
 
 # Expõe a porta onde o Express escuta
 EXPOSE 3333

@@ -1,13 +1,13 @@
 import { ListPokemonsUseCase } from '@application/useCases/listPokemons';
 import { CreatePokemonUseCase } from '@application/useCases/createPokemon';
 import { PokemonController } from '@infrastructure/http/controllers/pokemon.controller';
-import { PgPokemonRepository } from '@infrastructure/database/postgres/pgPokemon.repository';
+import { PrismaPokemonRepository } from '@infrastructure/database/prisma/prismaPokemon.repository';
 import { GetPokemonByIdUseCase } from '@application/useCases/getPokemonById';
 import { UpdatePokemonUseCase } from '@application/useCases/updatePokemon';
 import { DeletePokemonUseCase } from '@application/useCases/deletePokemon';
 
 // Repositório compartilhado (Singleton em memória durante o runtime)
-const pokemonRepository = new PgPokemonRepository();
+const pokemonRepository = new PrismaPokemonRepository();
 
 export function makePokemonController(): PokemonController {
   const listPokemonsUseCase = new ListPokemonsUseCase(pokemonRepository);

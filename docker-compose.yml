@@ -17,6 +17,7 @@ services:
     volumes:
       # Volume de desenvolvimento: Espelha alterações de código em tempo real
       - ./src:/usr/src/app/src
+    command: sh -c "npx prisma migrate deploy && node dist/src/main/server.js"
     depends_on:
       postgres:
         condition: service_healthy
