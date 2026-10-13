@@ -6,12 +6,18 @@ import swaggerUi from 'swagger-ui-express';
 export const setupSwagger = (app: Express): void => {
   const swaggerFile = path.resolve(__dirname, 'swagger-output.json');
 
-  if (fs.existsSync(swaggerFile)) {
-    const swaggerDocument = JSON.parse(fs.readFileSync(swaggerFile, 'utf8'));
-    app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-  } else {
-    console.warn(
-      '⚠️ Arquivo swagger-output.json não encontrado. Execute "npm run swagger".',
-    );
+  if (!fs.existsSync(swaggerFile)) {
+    console.error(`[Swagger] Arquivo não encontrado: ${swaggerFile}`);
+    return;
   }
+
+  const swaggerDocument = JSON.parse(fs.readFileSync(swaggerFile, 'utf8'));
+
+  app.use(
+    '/api/docs',
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerDocument, {
+      explorer: true,
+    }),
+  );
 };

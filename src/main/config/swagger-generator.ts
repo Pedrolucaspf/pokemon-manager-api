@@ -9,7 +9,7 @@ const doc = {
       'API de exemplo desenvolvida para a disciplina Tópicos Especiais em Engenharia de Software (UFF)',
   },
   host: 'localhost:3333',
-  basePath: '/api/v1/pokemons',
+  basePath: '/api/v1',
   schemes: ['http'],
   consumes: ['application/json'],
   produces: ['application/json'],
@@ -17,6 +17,10 @@ const doc = {
     {
       name: 'Pokemons',
       description: 'Endpoints de gerenciamento de pokemons',
+    },
+    {
+      name: 'Trainers',
+      description: 'Endpoints de gerenciamento de treinadores',
     },
   ],
   definitions: {
@@ -46,6 +50,16 @@ const doc = {
       $hp: '330',
       $nickname: 'Raiden',
     },
+    Trainer: {
+      $name: 'Red',
+      $email: 'blue@email.com',
+      $city: 'Pallet Town',
+    },
+    CreateTrainerDTO: {
+      $name: 'Red',
+      $email: 'blue@email.com',
+      $city: 'Pallet Town',
+    },
     ErrorResponse: {
       error: 'Tipo 1 inserido inválido.',
     },
@@ -56,7 +70,6 @@ const outputFile = path.resolve(__dirname, 'swagger-output.json');
 
 const endpointsFiles = [
   path.resolve(__dirname, '../../infrastructure/http/routes/pokemon.routes.ts'),
-  path.resolve(__dirname, '../server.ts'),
 ];
 
 swaggerAutogen({ openapi: '3.0.0' })(outputFile, endpointsFiles, doc);

@@ -1,10 +1,12 @@
 import { Router } from 'express';
 import { makePokemonController } from '@main/factories/makePokemonController.factory';
+import { makeTrainerController } from '@main/factories/makeTrainerController.factory';
 
 const pokemonRoutes = Router();
 const pokemonController = makePokemonController();
+const trainerController = makeTrainerController();
 
-pokemonRoutes.get('/', (req, res) => {
+pokemonRoutes.get('/pokemons', (req, res) => {
   /*
     #swagger.tags = ['Pokemons']
     #swagger.summary = 'Lista todos os pokemons'
@@ -13,6 +15,13 @@ pokemonRoutes.get('/', (req, res) => {
     #swagger.parameters['type'] = {
       in: 'query',
       description: 'Busca os pokemons pelo tipo (opcional)',
+      required: false,
+      type: 'string'
+    }
+
+    #swagger.parameters['search'] = {
+      in: 'query',
+      description: 'Busca os pokemons pelo nome (opcional)',
       required: false,
       type: 'string'
     }
@@ -37,7 +46,7 @@ pokemonRoutes.get('/', (req, res) => {
   return pokemonController.list(req, res);
 });
 
-pokemonRoutes.get('/:id', (req, res) => {
+pokemonRoutes.get('/pokemons/:id', (req, res) => {
   /*
     #swagger.tags = ['Pokemons']
     #swagger.summary = 'Busca pokemon por id'
@@ -59,7 +68,7 @@ pokemonRoutes.get('/:id', (req, res) => {
   return pokemonController.getById(req, res);
 });
 
-pokemonRoutes.post('/', (req, res) => {
+pokemonRoutes.post('/pokemons', (req, res) => {
   /*
     #swagger.tags = ['Pokemons']
     #swagger.summary = 'Cria um novo pokemon'
@@ -97,7 +106,7 @@ pokemonRoutes.post('/', (req, res) => {
   return pokemonController.create(req, res);
 });
 
-pokemonRoutes.put('/:id', (req, res) => {
+pokemonRoutes.put('/pokemons/:id', (req, res) => {
   /*
     #swagger.tags = ['Pokemons']
     #swagger.summary = 'Atualiza pokemon'
@@ -119,7 +128,7 @@ pokemonRoutes.put('/:id', (req, res) => {
   return pokemonController.update(req, res);
 });
 
-pokemonRoutes.delete('/:id', (req, res) => {
+pokemonRoutes.delete('/pokemons/:id', (req, res) => {
   /*
     #swagger.tags = ['Pokemons']
     #swagger.summary = 'Deleta pokemon'
@@ -139,6 +148,143 @@ pokemonRoutes.delete('/:id', (req, res) => {
     }
   */
   return pokemonController.delete(req, res);
+});
+
+pokemonRoutes.get('/trainers', (req, res) => {
+  /*
+    #swagger.tags = ['Trainers']
+    #swagger.summary = 'Lista todos os treinadores'
+    #swagger.description = 'Endpoint para listar treinadores cadastrados.'
+
+    #swagger.parameters['name'] = {
+      in: 'query',
+      description: 'Busca os treinadores pelo nome (opcional)',
+      required: false,
+      type: 'string'
+    }
+
+    #swagger.responses[200] = {
+      description: 'Lista de treinadores retornada com sucesso.',
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              data: {
+                type: 'array',
+                items: { $ref: '#/components/schemas/Trainer' }
+              }
+            }
+          }
+        }
+      }
+    }
+  */
+  return trainerController.list(req, res);
+});
+
+pokemonRoutes.get('/trainers/:email', (req, res) => {
+  /*
+    #swagger.tags = ['Trainers']
+    #swagger.summary = 'Busca treinador por email'
+    #swagger.description = 'Endpoint para buscar treinador cadastrado a partir de seu email.'
+    #swagger.responses[200] = {
+      description: 'Treinador retornado com sucesso.',
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              data: { $ref: '#/components/schemas/Trainer' }
+            }
+          }
+        }
+      }
+    }
+  */
+  return trainerController.getByEmail(req, res);
+});
+
+pokemonRoutes.post('/trainers', (req, res) => {
+  /*
+    #swagger.tags = ['Trainers']
+    #swagger.summary = 'Registra um novo treinador'
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        'application/json': {
+          schema: { $ref: '#/components/schemas/CreateTrainerDto' }
+        }
+      }
+    }
+    #swagger.responses[201] = {
+      description: 'Treinador criado com sucesso.',
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              message: { type: 'string', example: 'Treinador criado com sucesso!' },
+              data: { $ref: '#/components/schemas/Trainer' }
+            }
+          }
+        }
+      }
+    }
+    #swagger.responses[400] = {
+      description: 'Regra de negócio violada (ex: Dados faltando).',
+      content: {
+        'application/json': {
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
+        }
+      }
+    }
+  */
+  return trainerController.create(req, res);
+});
+
+pokemonRoutes.put('/trainers/:email', (req, res) => {
+  /*
+    #swagger.tags = ['Trainers']
+    #swagger.summary = 'Atualiza treinador'
+    #swagger.description = 'Endpoint para atualizar treinador cadastrado anteriormente a partir do seu email.'
+    #swagger.responses[200] = {
+      description: 'Treinador atualizado com sucesso.',
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              data: { $ref: '#/components/schemas/Trainer' }
+            }
+          }
+        }
+      }
+    }
+  */
+  return trainerController.update(req, res);
+});
+
+pokemonRoutes.delete('/trainers/:email', (req, res) => {
+  /*
+    #swagger.tags = ['Trainers']
+    #swagger.summary = 'Deleta treinador'
+    #swagger.description = 'Endpoint para deletar registro de treinador da base de dados.'
+    #swagger.responses[200] = {
+      description: 'Treinador deletado com sucesso.',
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              data: { $ref: '#/components/schemas/Trainer' }
+            }
+          }
+        }
+      }
+    }
+  */
+  return trainerController.delete(req, res);
 });
 
 export { pokemonRoutes };
