@@ -16,13 +16,14 @@ CREATE TABLE "pokemons" (
     "defense" INTEGER NOT NULL,
     "hp" INTEGER NOT NULL,
     "nickname" TEXT,
+    "trainerId" UUID,
 
     CONSTRAINT "pokemons_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "trainers" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "city" TEXT NOT NULL,
@@ -33,3 +34,6 @@ CREATE TABLE "trainers" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "trainers_email_key" ON "trainers"("email");
+
+-- AddForeignKey
+ALTER TABLE "pokemons" ADD CONSTRAINT "pokemons_trainerId_fkey" FOREIGN KEY ("trainerId") REFERENCES "trainers"("id") ON DELETE SET NULL ON UPDATE CASCADE;

@@ -5,6 +5,7 @@ export interface ITrainerRepository {
   update(trainer: Trainer): Promise<void>;
   delete(email: string): Promise<void>;
   findByEmail(email: string): Promise<Trainer | null>;
+  findById(id: string): Promise<Trainer | null>;
   searchByName(name: string): Promise<Trainer[]>;
   findAll(): Promise<Trainer[]>;
 }

@@ -17,6 +17,7 @@ export class PrismaPokemonRepository implements IPokemonRepository {
         defense: pokemon.defense,
         hp: pokemon.hp,
         nickname: pokemon.nickname,
+        trainerId: pokemon.trainerId,
       },
     });
   }
@@ -34,6 +35,7 @@ export class PrismaPokemonRepository implements IPokemonRepository {
         defense: pokemon.defense,
         hp: pokemon.hp,
         nickname: pokemon.nickname,
+        trainerId: pokemon.trainerId,
       },
     });
   }
@@ -67,6 +69,7 @@ export class PrismaPokemonRepository implements IPokemonRepository {
             hp: row.hp,
           },
           nickname: row.nickname ?? undefined,
+          trainerId: row.trainerId ?? undefined,
         }),
     );
   }
@@ -89,6 +92,7 @@ export class PrismaPokemonRepository implements IPokemonRepository {
             hp: row.hp,
           },
           nickname: row.nickname ?? undefined,
+          trainerId: row.trainerId ?? undefined,
         }),
     );
   }
@@ -115,6 +119,7 @@ export class PrismaPokemonRepository implements IPokemonRepository {
         hp: row.hp,
       },
       nickname: row.nickname ?? undefined,
+      trainerId: row.trainerId ?? undefined,
     });
   }
 
@@ -143,6 +148,7 @@ export class PrismaPokemonRepository implements IPokemonRepository {
             hp: row.hp,
           },
           nickname: row.nickname ?? undefined,
+          trainerId: row.trainerId ?? undefined,
         }),
     );
   }
@@ -178,6 +184,7 @@ export class PrismaPokemonRepository implements IPokemonRepository {
             hp: row.hp,
           },
           nickname: row.nickname ?? undefined,
+          trainerId: row.trainerId ?? undefined,
         }),
     );
   }

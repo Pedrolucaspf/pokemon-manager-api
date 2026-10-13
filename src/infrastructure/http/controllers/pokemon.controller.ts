@@ -25,6 +25,7 @@ export class PokemonController {
       defense,
       hp,
       nickname,
+      trainerId,
     } = req.body;
     const pokemon = await this.createPokemonUseCase.execute({
       id,
@@ -37,6 +38,7 @@ export class PokemonController {
       defense,
       hp,
       nickname,
+      trainerId,
     });
 
     return res.status(201).json({
@@ -47,8 +49,18 @@ export class PokemonController {
 
   async update(req: Request, res: Response): Promise<Response> {
     const { id } = req.params;
-    const { name, type1, type2, rarity, level, attack, defense, hp, nickname } =
-      req.body;
+    const {
+      name,
+      type1,
+      type2,
+      rarity,
+      level,
+      attack,
+      defense,
+      hp,
+      nickname,
+      trainerId,
+    } = req.body;
     const pokemon = await this.updatePokemonUseCase.execute(
       String(id),
       name,
@@ -60,6 +72,7 @@ export class PokemonController {
       defense,
       hp,
       nickname,
+      trainerId,
     );
 
     return res.status(200).json({
@@ -101,6 +114,7 @@ export class PokemonController {
       defense: pokemon.defense,
       hp: pokemon.hp,
       nickname: pokemon.nickname,
+      trainerId: pokemon.trainerId,
     }));
 
     return res.status(200).json({ data: formattedPokemons });

@@ -1,5 +1,6 @@
 import { Pokemon, pokemonType, Rarity } from '@domain/entities/pokemon';
 import { IPokemonRepository } from '@domain/repositories/pokemon.repository';
+import { ITrainerRepository } from '@domain/repositories/trainer.repository';
 import { AppError } from '@domain/errors/app.error';
 
 interface CreatePokemonDTO {
@@ -13,10 +14,14 @@ interface CreatePokemonDTO {
   defense: string;
   hp: string;
   nickname?: string;
+  trainerId?: string;
 }
 
 export class CreatePokemonUseCase {
-  constructor(private PokemonRepository: IPokemonRepository) {}
+  constructor(
+    private PokemonRepository: IPokemonRepository,
+    private TrainerRepository: ITrainerRepository,
+  ) {}
 
   async execute(data: CreatePokemonDTO): Promise<Pokemon> {
     const id = Number(data.id);
@@ -64,6 +69,16 @@ export class CreatePokemonUseCase {
     const num_hp = Number(data.hp);
     if (isNaN(num_hp)) {
       throw new AppError('Valor de HP deve ser numérico.', 400);
+    }
+
+    if (data.trainerId != null) {
+      const TrainerExists = await this.TrainerRepository.findById(
+        data.trainerId,
+      );
+
+      if (!TrainerExists) {
+        throw new AppError('ID inválido para treinador.', 404);
+      }
     }
 
     const newPokemon = new Pokemon({

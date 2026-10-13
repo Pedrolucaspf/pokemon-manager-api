@@ -38,6 +38,7 @@ export class PrismaTrainerRepository implements ITrainerRepository {
     return trainersRaw.map(
       (row: PrismaTrainer) =>
         new Trainer({
+          id: row.id,
           name: row.name,
           email: row.email,
           city: row.city,
@@ -55,6 +56,24 @@ export class PrismaTrainerRepository implements ITrainerRepository {
     }
 
     return new Trainer({
+      id: row.id,
+      name: row.name,
+      email: row.email,
+      city: row.city,
+    });
+  }
+
+  async findById(id: string): Promise<Trainer | null> {
+    const row = await prisma.trainer.findUnique({
+      where: { id: id },
+    });
+
+    if (!row) {
+      return null;
+    }
+
+    return new Trainer({
+      id: row.id,
       name: row.name,
       email: row.email,
       city: row.city,
@@ -74,6 +93,7 @@ export class PrismaTrainerRepository implements ITrainerRepository {
     return trainersRaw.map(
       (row: PrismaTrainer) =>
         new Trainer({
+          id: row.id,
           name: row.name,
           email: row.email,
           city: row.city,

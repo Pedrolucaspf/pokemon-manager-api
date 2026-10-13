@@ -57,16 +57,20 @@ model Pokemon {
   defense   Int
   hp        Int
   nickname  String?
+  trainerId String? @db.Uuid
+
+  trainer Trainer? @relation(fields: [trainerId], references: [id])
 
   @@map("pokemons")
 }
 
 model Trainer {
-  id        String   @id @default(uuid())
+  id        String   @id @default(uuid()) @db.Uuid
   name      String
   email     String   @unique
   city      String
   createdAt DateTime @default(now()) @map("created_at")
 
+  pokemons Pokemon[]
   @@map("trainers")
 }

@@ -43,8 +43,8 @@ export class TrainerController {
   }
 
   async delete(req: Request, res: Response): Promise<Response> {
-    const { email } = req.params;
-    const trainer = await this.deleteTrainerUseCase.execute(String(email));
+    const { id } = req.params;
+    const trainer = await this.deleteTrainerUseCase.execute(String(id));
     return res.status(200).json(trainer);
   }
 

@@ -1,9 +1,13 @@
 import { Pokemon, pokemonType, Rarity } from '@domain/entities/pokemon';
 import { IPokemonRepository } from '@domain/repositories/pokemon.repository';
+import { ITrainerRepository } from '@domain/repositories/trainer.repository';
 import { AppError } from '@domain/errors/app.error';
 
 export class UpdatePokemonUseCase {
-  constructor(private PokemonRepository: IPokemonRepository) {}
+  constructor(
+    private PokemonRepository: IPokemonRepository,
+    private TrainerRepository: ITrainerRepository,
+  ) {}
 
   async execute(
     id: string,
@@ -16,6 +20,7 @@ export class UpdatePokemonUseCase {
     defense?: string,
     hp?: string,
     nickname?: string,
+    trainerId?: string,
   ): Promise<Pokemon> {
     const num_id = Number(id);
     const pokemon = await this.PokemonRepository.findById(num_id);
@@ -40,11 +45,13 @@ export class UpdatePokemonUseCase {
       !level &&
       !attack &&
       !defense &&
-      !hp
+      !hp &&
+      !nickname &&
+      !trainerId
     ) {
       throw new AppError(
-        'Atualização vazia: novo name/type/rarity/attack/defense/hp deve ser inserido.',
-        4000,
+        'Atualização vazia, algum atributo precisa ser atualizado.',
+        400,
       );
     } else {
       if (!name) {
@@ -119,6 +126,16 @@ export class UpdatePokemonUseCase {
       if (!nickname) {
         nickname = pokemon.nickname;
       }
+
+      if (!trainerId) {
+        trainerId = pokemon.trainerId;
+      } else {
+        const TrainerExists = await this.TrainerRepository.findById(trainerId);
+
+        if (!TrainerExists) {
+          throw new AppError('ID inválido para treinador.', 404);
+        }
+      }
     }
 
     const newPokemon = new Pokemon({
@@ -134,6 +151,7 @@ export class UpdatePokemonUseCase {
         hp: Number(num_hp),
       },
       nickname: nickname,
+      trainerId: trainerId,
     });
 
     await this.PokemonRepository.update(newPokemon);

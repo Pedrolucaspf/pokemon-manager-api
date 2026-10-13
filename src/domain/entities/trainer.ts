@@ -1,4 +1,5 @@
 export interface TrainerProps {
+  id?: string;
   name: string;
   email: string;
   city: string;
@@ -11,6 +12,9 @@ export class Trainer {
     this.props = props;
   }
 
+  get id() {
+    return this.props.id;
+  }
   get name() {
     return this.props.name;
   }

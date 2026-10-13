@@ -42,6 +42,7 @@ export interface PokemonProps {
   level: number;
   stats: IPokemonBattleStats;
   nickname?: string;
+  trainerId?: string;
 }
 
 export class Pokemon {
@@ -99,5 +100,8 @@ export class Pokemon {
   }
   get nickname() {
     return this.props.nickname;
+  }
+  get trainerId() {
+    return this.props.trainerId;
   }
 }
