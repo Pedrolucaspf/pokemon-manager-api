@@ -1,5 +1,5 @@
 import { Trainer } from '@domain/entities/trainer';
-import { AppError } from '@domain/errors/app.error';
+import { NotFoundError } from '@domain/errors/not-found-error';
 import { ITrainerRepository } from '@domain/repositories/trainer.repository';
 
 export class GetTrainerByEmailUseCase {
@@ -10,7 +10,7 @@ export class GetTrainerByEmailUseCase {
     if (trainer) {
       return trainer;
     } else {
-      throw new AppError('Treinador não encontrado no catálogo.', 404);
+      throw new NotFoundError('Treinador');
     }
   }
 }

@@ -1,7 +1,9 @@
 import { Pokemon, pokemonType, Rarity } from '@domain/entities/pokemon';
 import { IPokemonRepository } from '@domain/repositories/pokemon.repository';
 import { ITrainerRepository } from '@domain/repositories/trainer.repository';
-import { AppError } from '@domain/errors/app.error';
+import { ConflictError } from '@domain/errors/conflict-error';
+import { UnprocessableError } from '@domain/errors/unprocessable-error';
+import { NotFoundError } from '@domain/errors/not-found-error';
 
 interface CreatePokemonDTO {
   id: string;
@@ -28,11 +30,11 @@ export class CreatePokemonUseCase {
     const PokemonAlreadyExists = await this.PokemonRepository.findById(id);
 
     if (PokemonAlreadyExists) {
-      throw new AppError('Pokemon com este id já está cadastrado.', 400);
+      throw new ConflictError('Pokemon com este id já está cadastrado.');
     }
 
     if (!Object.values(pokemonType).includes(data.type1 as pokemonType)) {
-      throw new AppError('Tipo 1 inserido inválido.', 400);
+      throw new UnprocessableError('Tipo 1 inserido inválido.');
     }
 
     const enum_type1 = data.type1 as pokemonType;
@@ -40,35 +42,35 @@ export class CreatePokemonUseCase {
     let enum_type2;
     if (data.type2 != null) {
       if (!Object.values(pokemonType).includes(data.type2 as pokemonType)) {
-        throw new AppError('Tipo 2 inserido inválido.', 400);
+        throw new UnprocessableError('Tipo 2 inserido inválido.');
       }
       enum_type2 = data.type2 as pokemonType;
     }
 
     if (!Object.values(Rarity).includes(data.rarity as Rarity)) {
-      throw new AppError('Raridade inserida inválida.', 400);
+      throw new UnprocessableError('Raridade inserida inválida.');
     }
 
     const enum_rarity = data.rarity as Rarity;
 
     const num_level = Number(data.level);
     if (isNaN(num_level)) {
-      throw new AppError('Valor de nível deve ser numérico.', 400);
+      throw new UnprocessableError('Valor de nível deve ser numérico.');
     }
 
     const num_attack = Number(data.attack);
     if (isNaN(num_attack)) {
-      throw new AppError('Valor de ataque deve ser numérico.', 400);
+      throw new UnprocessableError('Valor de ataque deve ser numérico.');
     }
 
     const num_defense = Number(data.defense);
     if (isNaN(num_defense)) {
-      throw new AppError('Valor de defesa deve ser numérico.', 400);
+      throw new UnprocessableError('Valor de defesa deve ser numérico.');
     }
 
     const num_hp = Number(data.hp);
     if (isNaN(num_hp)) {
-      throw new AppError('Valor de HP deve ser numérico.', 400);
+      throw new UnprocessableError('Valor de HP deve ser numérico.');
     }
 
     if (data.trainerId != null) {
@@ -77,7 +79,7 @@ export class CreatePokemonUseCase {
       );
 
       if (!TrainerExists) {
-        throw new AppError('ID inválido para treinador.', 404);
+        throw new NotFoundError('Treinador');
       }
     }
 

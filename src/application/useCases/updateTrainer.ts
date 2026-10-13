@@ -1,6 +1,7 @@
 import { Trainer } from '@domain/entities/trainer';
 import { ITrainerRepository } from '@domain/repositories/trainer.repository';
-import { AppError } from '@domain/errors/app.error';
+import { NotFoundError } from '@domain/errors/not-found-error';
+import { BadRequestError } from '@domain/errors/bad-request-error';
 
 export class UpdateTrainerUseCase {
   constructor(private TrainerRepository: ITrainerRepository) {}
@@ -9,13 +10,12 @@ export class UpdateTrainerUseCase {
     const trainer = await this.TrainerRepository.findByEmail(email);
 
     if (!trainer) {
-      throw new AppError('Trainer não encontrado no catálogo.', 404);
+      throw new NotFoundError('Treinador');
     }
 
     if (!name && !city) {
-      throw new AppError(
+      throw new BadRequestError(
         'Atualização vazia: novo name/type/rarity/attack/defense/hp deve ser inserido.',
-        4000,
       );
     } else {
       if (!name) {

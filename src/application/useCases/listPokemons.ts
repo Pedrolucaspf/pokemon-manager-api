@@ -1,6 +1,6 @@
 import { Pokemon, pokemonType } from '@domain/entities/pokemon';
 import { IPokemonRepository } from '@domain/repositories/pokemon.repository';
-import { AppError } from '@domain/errors/app.error';
+import { UnprocessableError } from '@domain/errors/unprocessable-error';
 
 export class ListPokemonsUseCase {
   constructor(private pokemonRepository: IPokemonRepository) {}
@@ -10,7 +10,7 @@ export class ListPokemonsUseCase {
       type = type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
 
       if (!Object.values(pokemonType).includes(type as pokemonType)) {
-        throw new AppError('Tipo inserido inválido.', 400);
+        throw new UnprocessableError('Tipo inserido inválido.');
       }
 
       if (name !== undefined) {

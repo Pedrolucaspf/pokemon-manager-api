@@ -1,4 +1,5 @@
-import { AppError } from '@domain/errors/app.error';
+import { ConflictError } from '@domain/errors/conflict-error';
+import { UnprocessableError } from '@domain/errors/unprocessable-error';
 
 export enum pokemonType {
   NORMAL = 'Normal',
@@ -50,23 +51,23 @@ export class Pokemon {
 
   constructor(props: PokemonProps) {
     if (props.stats.attack < 0) {
-      throw new AppError('Valor inválido para o ataque.', 400);
+      throw new UnprocessableError('Valor inválido para o ataque.');
     } else if (props.stats.defense < 0) {
-      throw new AppError('Valor inválido para a defesa.', 400);
+      throw new UnprocessableError('Valor inválido para a defesa.');
     } else if (props.stats.hp < 0) {
-      throw new AppError('Valor inválido para o hp.', 400);
+      throw new UnprocessableError('Valor inválido para o hp.');
     } else if (
       !Object.values(pokemonType).includes(props.type1 as pokemonType)
     ) {
-      throw new AppError('Tipo 1 inserido inválido.', 400);
+      throw new UnprocessableError('Tipo 1 inserido inválido.');
     } else if (props.type2 != null) {
       if (!Object.values(pokemonType).includes(props.type2 as pokemonType)) {
-        throw new AppError('Tipo 2 inserido inválido.', 400);
+        throw new UnprocessableError('Tipo 2 inserido inválido.');
       } else if (props.type2 === props.type1) {
-        throw new AppError('Tipos 1 e 2 não podem ser iguais.', 400);
+        throw new ConflictError('Tipos 1 e 2 não podem ser iguais.');
       }
     } else if (!Object.values(Rarity).includes(props.rarity as Rarity)) {
-      throw new AppError('Raridade inserida inválida.', 400);
+      throw new UnprocessableError('Raridade inserida inválida.');
     }
     this.props = props;
   }

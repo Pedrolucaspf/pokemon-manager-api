@@ -1,6 +1,6 @@
 import { Trainer } from '@domain/entities/trainer';
 import { ITrainerRepository } from '@domain/repositories/trainer.repository';
-import { AppError } from '@domain/errors/app.error';
+import { ConflictError } from '@domain/errors/conflict-error';
 
 interface CreateTrainerDTO {
   name: string;
@@ -17,7 +17,7 @@ export class CreateTrainerUseCase {
     );
 
     if (TrainerAlreadyExists) {
-      throw new AppError('Trainer com este email já está cadastrado.', 400);
+      throw new ConflictError('Trainer com este email já está cadastrado.');
     }
 
     const newTrainer = new Trainer({

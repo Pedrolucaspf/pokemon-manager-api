@@ -1,4 +1,4 @@
-export class AppError {
+export abstract class AppError {
   public readonly message: string;
   public readonly statusCode: number;
   public readonly details?: unknown;

@@ -1,7 +1,9 @@
 import { Pokemon, pokemonType, Rarity } from '@domain/entities/pokemon';
 import { IPokemonRepository } from '@domain/repositories/pokemon.repository';
 import { ITrainerRepository } from '@domain/repositories/trainer.repository';
-import { AppError } from '@domain/errors/app.error';
+import { NotFoundError } from '@domain/errors/not-found-error';
+import { BadRequestError } from '@domain/errors/bad-request-error';
+import { UnprocessableError } from '@domain/errors/unprocessable-error';
 
 export class UpdatePokemonUseCase {
   constructor(
@@ -26,7 +28,7 @@ export class UpdatePokemonUseCase {
     const pokemon = await this.PokemonRepository.findById(num_id);
 
     if (!pokemon) {
-      throw new AppError('Pokemon não encontrado no catálogo.', 404);
+      throw new NotFoundError('Pokemon');
     }
 
     let enum_type1;
@@ -49,9 +51,8 @@ export class UpdatePokemonUseCase {
       !nickname &&
       !trainerId
     ) {
-      throw new AppError(
+      throw new BadRequestError(
         'Atualização vazia, algum atributo precisa ser atualizado.',
-        400,
       );
     } else {
       if (!name) {
@@ -62,7 +63,7 @@ export class UpdatePokemonUseCase {
         enum_type1 = pokemon.type1;
       } else {
         if (!Object.values(pokemonType).includes(type1 as pokemonType)) {
-          throw new AppError('Tipo 1 inserido inválido.', 400);
+          throw new UnprocessableError('Tipo 1 inserido inválido.');
         }
 
         enum_type1 = type1 as pokemonType;
@@ -72,7 +73,7 @@ export class UpdatePokemonUseCase {
         enum_type2 = pokemon.type2;
       } else {
         if (!Object.values(pokemonType).includes(type2 as pokemonType)) {
-          throw new AppError('Tipo 2 inserido inválido.', 400);
+          throw new UnprocessableError('Tipo 2 inserido inválido.');
         }
 
         enum_type2 = type2 as pokemonType;
@@ -82,7 +83,7 @@ export class UpdatePokemonUseCase {
         enum_rarity = pokemon.rarity;
       } else {
         if (!Object.values(Rarity).includes(rarity as Rarity)) {
-          throw new AppError('Raridade inserida inválida.', 400);
+          throw new UnprocessableError('Raridade inserida inválida.');
         }
         enum_rarity = rarity as Rarity;
       }
@@ -92,7 +93,7 @@ export class UpdatePokemonUseCase {
       } else {
         num_level = Number(level);
         if (isNaN(num_level)) {
-          throw new AppError('Valor de nível deve ser numérico.', 400);
+          throw new UnprocessableError('Valor de nível deve ser numérico.');
         }
       }
 
@@ -101,7 +102,7 @@ export class UpdatePokemonUseCase {
       } else {
         num_attack = Number(attack);
         if (isNaN(num_attack)) {
-          throw new AppError('Valor de ataque deve ser numérico.', 400);
+          throw new UnprocessableError('Valor de ataque deve ser numérico.');
         }
       }
 
@@ -110,7 +111,7 @@ export class UpdatePokemonUseCase {
       } else {
         num_defense = Number(defense);
         if (isNaN(num_defense)) {
-          throw new AppError('Valor de defesa deve ser numérico.', 400);
+          throw new UnprocessableError('Valor de defesa deve ser numérico.');
         }
       }
 
@@ -119,7 +120,7 @@ export class UpdatePokemonUseCase {
       } else {
         num_hp = Number(hp);
         if (isNaN(num_hp)) {
-          throw new AppError('Valor de HP deve ser numérico.', 400);
+          throw new UnprocessableError('Valor de HP deve ser numérico.');
         }
       }
 
@@ -133,7 +134,7 @@ export class UpdatePokemonUseCase {
         const TrainerExists = await this.TrainerRepository.findById(trainerId);
 
         if (!TrainerExists) {
-          throw new AppError('ID inválido para treinador.', 404);
+          throw new NotFoundError('Treinador.');
         }
       }
     }

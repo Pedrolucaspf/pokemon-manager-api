@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { ZodSchema, ZodError } from 'zod';
-import { AppError } from '@domain/errors/app.error';
+import { BadRequestError } from '@domain/errors/bad-request-error';
 
 interface RequestValidationSchemas {
   body?: ZodSchema;
@@ -36,7 +36,7 @@ export const validateRequest = (schemas: RequestValidationSchemas) => {
         }));
 
         return next(
-          new AppError('Dados de entrada inválidos', 400, issueDetails),
+          new BadRequestError('Dados de entrada inválidos', issueDetails),
         );
       }
 
