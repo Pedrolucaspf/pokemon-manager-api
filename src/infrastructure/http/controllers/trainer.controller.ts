@@ -43,8 +43,8 @@ export class TrainerController {
   }
 
   async delete(req: Request, res: Response): Promise<Response> {
-    const { id } = req.params;
-    const trainer = await this.deleteTrainerUseCase.execute(String(id));
+    const { email } = req.params;
+    const trainer = await this.deleteTrainerUseCase.execute(String(email));
     return res.status(200).json(trainer);
   }
 
@@ -58,6 +58,7 @@ export class TrainerController {
     }
 
     const formattedTrainers = trainers.map((trainer) => ({
+      id: trainer.id,
       name: trainer.name,
       email: trainer.email,
       city: trainer.city,
