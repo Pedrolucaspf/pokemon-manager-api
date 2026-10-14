@@ -59,7 +59,7 @@ model Pokemon {
   nickname  String?
   trainerId String? @db.Uuid
 
-  trainer Trainer? @relation(fields: [trainerId], references: [id])
+  trainer Trainer? @relation(fields: [trainerId], references: [id], onDelete: SetNull)
 
   @@map("pokemons")
 }
@@ -72,5 +72,20 @@ model Trainer {
   createdAt DateTime @default(now()) @map("created_at")
 
   pokemons Pokemon[]
+  captures Capture[]
   @@map("trainers")
+}
+
+model Capture {
+  id               String   @id @default(uuid()) @db.Uuid
+  trainerId        String  @db.Uuid
+  pokemonName      String
+  spriteUrl        String
+  base_experience  Int
+  height           Int
+  weight           Int
+
+  trainer Trainer? @relation(fields: [trainerId], references: [id], onDelete: Cascade)
+
+  @@map("capture")
 }

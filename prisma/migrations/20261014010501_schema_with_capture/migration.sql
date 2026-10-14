@@ -32,8 +32,24 @@ CREATE TABLE "trainers" (
     CONSTRAINT "trainers_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "capture" (
+    "id" UUID NOT NULL,
+    "trainerId" UUID NOT NULL,
+    "pokemonName" TEXT NOT NULL,
+    "spriteUrl" TEXT NOT NULL,
+    "base_experience" INTEGER NOT NULL,
+    "height" INTEGER NOT NULL,
+    "weight" INTEGER NOT NULL,
+
+    CONSTRAINT "capture_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "trainers_email_key" ON "trainers"("email");
 
 -- AddForeignKey
 ALTER TABLE "pokemons" ADD CONSTRAINT "pokemons_trainerId_fkey" FOREIGN KEY ("trainerId") REFERENCES "trainers"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "capture" ADD CONSTRAINT "capture_trainerId_fkey" FOREIGN KEY ("trainerId") REFERENCES "trainers"("id") ON DELETE CASCADE ON UPDATE CASCADE;
