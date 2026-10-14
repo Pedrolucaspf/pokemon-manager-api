@@ -10,7 +10,7 @@ app.use(express.json());
 // 1. Documentação Swagger
 setupSwagger(app);
 
-app.use('/api/v1/pokemons', pokemonRoutes);
+app.use('/api/v1', pokemonRoutes);
 
 // 3. Middleware Global de Erros (OBRIGATORIAMENTE NO FINAL)
 app.use(errorHandler);

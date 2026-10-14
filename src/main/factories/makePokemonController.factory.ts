@@ -1,20 +1,33 @@
 import { ListPokemonsUseCase } from '@application/useCases/listPokemons';
 import { CreatePokemonUseCase } from '@application/useCases/createPokemon';
 import { PokemonController } from '@infrastructure/http/controllers/pokemon.controller';
-import { InMemoryPokemonRepository } from '@infrastructure/database/inMemoryPokemon.repository';
+import { PrismaPokemonRepository } from '@infrastructure/database/prisma/prismaPokemon.repository';
+import { PrismaTrainerRepository } from '@infrastructure/database/prisma/prismaTrainer.repository';
 import { GetPokemonByIdUseCase } from '@application/useCases/getPokemonById';
 import { UpdatePokemonUseCase } from '@application/useCases/updatePokemon';
 import { DeletePokemonUseCase } from '@application/useCases/deletePokemon';
+import { SearchPokeApiUseCase } from '@application/useCases/searchPokeApi';
+import { PokeApiAxiosGateway } from '@infrastructure/gateways/pokeapi-axios-gateway';
 
 // Repositório compartilhado (Singleton em memória durante o runtime)
-const pokemonRepository = new InMemoryPokemonRepository();
+const pokemonRepository = new PrismaPokemonRepository();
+const trainerRepository = new PrismaTrainerRepository();
+const pokeAxiosGateway = new PokeApiAxiosGateway();
 
 export function makePokemonController(): PokemonController {
   const listPokemonsUseCase = new ListPokemonsUseCase(pokemonRepository);
-  const createPokemonUseCase = new CreatePokemonUseCase(pokemonRepository);
+  const createPokemonUseCase = new CreatePokemonUseCase(
+    pokemonRepository,
+    trainerRepository,
+    pokeAxiosGateway,
+  );
   const getPokemonByIdUseCase = new GetPokemonByIdUseCase(pokemonRepository);
-  const updatePokemonUseCase = new UpdatePokemonUseCase(pokemonRepository);
+  const updatePokemonUseCase = new UpdatePokemonUseCase(
+    pokemonRepository,
+    trainerRepository,
+  );
   const deletePokemonUseCase = new DeletePokemonUseCase(pokemonRepository);
+  const searchPokeApiUseCase = new SearchPokeApiUseCase(pokeAxiosGateway);
 
   return new PokemonController(
     listPokemonsUseCase,
@@ -22,5 +35,6 @@ export function makePokemonController(): PokemonController {
     getPokemonByIdUseCase,
     updatePokemonUseCase,
     deletePokemonUseCase,
+    searchPokeApiUseCase,
   );
 }

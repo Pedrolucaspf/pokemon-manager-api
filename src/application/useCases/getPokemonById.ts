@@ -1,5 +1,5 @@
 import { Pokemon } from '@domain/entities/pokemon';
-import { AppError } from '@domain/errors/app.error';
+import { NotFoundError } from '@domain/errors/not-found-error';
 import { IPokemonRepository } from '@domain/repositories/pokemon.repository';
 
 export class GetPokemonByIdUseCase {
@@ -11,7 +11,7 @@ export class GetPokemonByIdUseCase {
     if (pokemon) {
       return pokemon;
     } else {
-      throw new AppError('Pokemon não encontrado no catálogo.', 404);
+      throw new NotFoundError('Pokemon');
     }
   }
 }

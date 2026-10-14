@@ -1,3 +1,6 @@
+import { ConflictError } from '@domain/errors/conflict-error';
+import { UnprocessableError } from '@domain/errors/unprocessable-error';
+
 export enum pokemonType {
   NORMAL = 'Normal',
   GRASS = 'Grass',
@@ -34,10 +37,13 @@ export interface IPokemonBattleStats {
 export interface PokemonProps {
   id: number;
   name: string;
-  type: pokemonType;
+  type1: pokemonType;
+  type2?: pokemonType;
   rarity: Rarity;
+  level: number;
   stats: IPokemonBattleStats;
   nickname?: string;
+  trainerId?: string;
 }
 
 export class Pokemon {
@@ -45,11 +51,23 @@ export class Pokemon {
 
   constructor(props: PokemonProps) {
     if (props.stats.attack < 0) {
-      throw new Error('Valor inválido para o ataque.');
+      throw new UnprocessableError('Valor inválido para o ataque.');
     } else if (props.stats.defense < 0) {
-      throw new Error('Valor inválido para a defesa.');
+      throw new UnprocessableError('Valor inválido para a defesa.');
     } else if (props.stats.hp < 0) {
-      throw new Error('Valor inválido para o hp.');
+      throw new UnprocessableError('Valor inválido para o hp.');
+    } else if (
+      !Object.values(pokemonType).includes(props.type1 as pokemonType)
+    ) {
+      throw new UnprocessableError('Tipo 1 inserido inválido.');
+    } else if (props.type2 != null) {
+      if (!Object.values(pokemonType).includes(props.type2 as pokemonType)) {
+        throw new UnprocessableError('Tipo 2 inserido inválido.');
+      } else if (props.type2 === props.type1) {
+        throw new ConflictError('Tipos 1 e 2 não podem ser iguais.');
+      }
+    } else if (!Object.values(Rarity).includes(props.rarity as Rarity)) {
+      throw new UnprocessableError('Raridade inserida inválida.');
     }
     this.props = props;
   }
@@ -60,11 +78,17 @@ export class Pokemon {
   get name() {
     return this.props.name;
   }
-  get type() {
-    return this.props.type;
+  get type1() {
+    return this.props.type1;
+  }
+  get type2() {
+    return this.props.type2;
   }
   get rarity() {
     return this.props.rarity;
+  }
+  get level() {
+    return this.props.level;
   }
   get attack() {
     return this.props.stats.attack;
@@ -77,5 +101,8 @@ export class Pokemon {
   }
   get nickname() {
     return this.props.nickname;
+  }
+  get trainerId() {
+    return this.props.trainerId;
   }
 }

@@ -1,6 +1,6 @@
 import { Pokemon } from '@domain/entities/pokemon';
 import { IPokemonRepository } from '@domain/repositories/pokemon.repository';
-import { AppError } from '@domain/errors/app.error';
+import { NotFoundError } from '@domain/errors/not-found-error';
 
 export class DeletePokemonUseCase {
   constructor(private PokemonRepository: IPokemonRepository) {}
@@ -10,7 +10,7 @@ export class DeletePokemonUseCase {
     const pokemon = await this.PokemonRepository.findById(num_id);
 
     if (!pokemon) {
-      throw new AppError('Pokemon não encontrado no catálogo.', 404);
+      throw new NotFoundError('Pokemon');
     }
 
     await this.PokemonRepository.delete(num_id);

@@ -4,7 +4,10 @@ export interface IPokemonRepository {
   create(pokemon: Pokemon): Promise<void>;
   update(pokemon: Pokemon): Promise<void>;
   delete(id: number): Promise<void>;
-  findByType(type: string): Promise<Pokemon[] | null>;
+  findByType(type: string): Promise<Pokemon[]>;
   findById(id: number): Promise<Pokemon | null>;
   findAll(): Promise<Pokemon[]>;
+  searchByName(name: string): Promise<Pokemon[]>;
+  searchByNameAndType(name: string, type: string): Promise<Pokemon[]>;
+  countPokemonsByTrainer(trainerId: string): Promise<number>;
 }
