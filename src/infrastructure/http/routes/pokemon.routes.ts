@@ -16,10 +16,16 @@ import {
 } from '../schemas/trainer-schemas';
 import { makePokemonController } from '@main/factories/makePokemonController.factory';
 import { makeTrainerController } from '@main/factories/makeTrainerController.factory';
+import { makeCaptureController } from '@main/factories/makeCaptureController.factory';
+import {
+  createCaptureSchema,
+  listCapturesSchema,
+} from '../schemas/capture-schemas';
 
 const pokemonRoutes = Router();
 const pokemonController = makePokemonController();
 const trainerController = makeTrainerController();
+const captureController = makeCaptureController();
 
 pokemonRoutes.get(
   '/pokemons',
@@ -39,7 +45,7 @@ pokemonRoutes.get(
 
     #swagger.parameters['parseAsync(req'] = { in: 'query', implicit: true, schema: { type: 'string' }, ignore: true }
 
-    #swagger.parameters['search'] = {
+    #swagger.parameters['name'] = {
       in: 'query',
       description: 'Busca os pokemons pelo nome (opcional)',
       required: false,
@@ -64,6 +70,45 @@ pokemonRoutes.get(
     }
   */
     return pokemonController.list(req, res);
+  },
+);
+
+pokemonRoutes.get(
+  '/pokedex',
+  validateRequest({ query: listPokemonsSchema }),
+  (req, res) => {
+    /*
+    #swagger.tags = ['Pokedex']
+    #swagger.summary = 'Busca pokemon na API externa'
+    #swagger.description = 'Endpoint para buscar pokemon na API externa pelo nome.'
+
+    #swagger.parameters['parseAsync(req'] = { in: 'query', implicit: true, schema: { type: 'string' }, ignore: true }
+
+    #swagger.parameters['search'] = {
+      in: 'query',
+      description: 'Busca os pokemons pelo nome (opcional)',
+      required: true,
+      type: 'string'
+    }
+
+    #swagger.responses[200] = {
+      description: 'Pokemon retornado com sucesso.',
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              data: {
+                type: 'array',
+                items: { $ref: '#/components/schemas/Pokemon' }
+              }
+            }
+          }
+        }
+      }
+    }
+  */
+    return pokemonController.searchApi(req, res);
   },
 );
 
@@ -358,6 +403,81 @@ pokemonRoutes.delete(
     }
   */
     return trainerController.delete(req, res);
+  },
+);
+
+pokemonRoutes.post(
+  '/trainers/:trainerId/captures',
+  validateRequest({ body: createCaptureSchema }),
+  (req, res) => {
+    /*
+    #swagger.tags = ['Captures']
+    #swagger.summary = 'Registra uma nova captura'
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        'application/json': {
+          schema: { $ref: '#/components/schemas/CreateCaptureDto' }
+        }
+      }
+    }
+    #swagger.parameters['parseAsync(req'] = { in: 'query', implicit: true, schema: { type: 'string' }, ignore: true }
+    #swagger.responses[201] = {
+      description: 'Captura registrada com sucesso.',
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              message: { type: 'string', example: 'Captura registrada com sucesso!' },
+              data: { $ref: '#/components/schemas/Capture' }
+            }
+          }
+        }
+      }
+    }
+    #swagger.responses[400] = {
+      description: 'Regra de negócio violada (ex: Dados faltando).',
+      content: {
+        'application/json': {
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
+        }
+      }
+    }
+  */
+    return captureController.create(req, res);
+  },
+);
+
+pokemonRoutes.get(
+  '/trainers/:trainerId/team',
+  validateRequest({ query: listCapturesSchema }),
+  (req, res) => {
+    /*
+    #swagger.tags = ['Trainers']
+    #swagger.summary = 'Lista capturas'
+    #swagger.description = 'Endpoint para listar capturas cadastradas por treinador.'
+
+    #swagger.parameters['parseAsync(req'] = { in: 'query', implicit: true, schema: { type: 'string' }, ignore: true }
+
+    #swagger.responses[200] = {
+      description: 'Lista de capturas retornada com sucesso.',
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              data: {
+                type: 'array',
+                items: { $ref: '#/components/schemas/Capture' }
+              }
+            }
+          }
+        }
+      }
+    }
+  */
+    return captureController.list(req, res);
   },
 );
 

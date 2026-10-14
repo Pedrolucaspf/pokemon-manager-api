@@ -4,6 +4,7 @@ import { CreatePokemonUseCase } from '@application/useCases/createPokemon';
 import { GetPokemonByIdUseCase } from '@application/useCases/getPokemonById';
 import { UpdatePokemonUseCase } from '@application/useCases/updatePokemon';
 import { DeletePokemonUseCase } from '@application/useCases/deletePokemon';
+import { SearchPokeApiUseCase } from '@application/useCases/searchPokeApi';
 
 export class PokemonController {
   constructor(
@@ -12,6 +13,7 @@ export class PokemonController {
     private getPokemonByIdUseCase: GetPokemonByIdUseCase,
     private updatePokemonUseCase: UpdatePokemonUseCase,
     private deletePokemonUseCase: DeletePokemonUseCase,
+    private searchPokeApiUseCase: SearchPokeApiUseCase,
   ) {}
   async create(req: Request, res: Response): Promise<Response> {
     const {
@@ -89,7 +91,7 @@ export class PokemonController {
 
   async list(req: Request, res: Response): Promise<Response> {
     const type = req.query.type as string;
-    const name = req.query.search as string;
+    const name = req.query.name as string;
     let pokemons;
     if (type) {
       if (name) {
@@ -123,6 +125,12 @@ export class PokemonController {
   async getById(req: Request, res: Response): Promise<Response> {
     const { id } = req.params;
     const pokemon = await this.getPokemonByIdUseCase.execute(String(id));
+    return res.status(200).json(pokemon);
+  }
+
+  async searchApi(req: Request, res: Response): Promise<Response> {
+    const search = req.query.search as string;
+    const pokemon = await this.searchPokeApiUseCase.execute(search);
     return res.status(200).json(pokemon);
   }
 }

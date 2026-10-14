@@ -6,16 +6,20 @@ import { PrismaTrainerRepository } from '@infrastructure/database/prisma/prismaT
 import { GetPokemonByIdUseCase } from '@application/useCases/getPokemonById';
 import { UpdatePokemonUseCase } from '@application/useCases/updatePokemon';
 import { DeletePokemonUseCase } from '@application/useCases/deletePokemon';
+import { SearchPokeApiUseCase } from '@application/useCases/searchPokeApi';
+import { PokeApiAxiosGateway } from '@infrastructure/gateways/pokeapi-axios-gateway';
 
 // Repositório compartilhado (Singleton em memória durante o runtime)
 const pokemonRepository = new PrismaPokemonRepository();
 const trainerRepository = new PrismaTrainerRepository();
+const pokeAxiosGateway = new PokeApiAxiosGateway();
 
 export function makePokemonController(): PokemonController {
   const listPokemonsUseCase = new ListPokemonsUseCase(pokemonRepository);
   const createPokemonUseCase = new CreatePokemonUseCase(
     pokemonRepository,
     trainerRepository,
+    pokeAxiosGateway,
   );
   const getPokemonByIdUseCase = new GetPokemonByIdUseCase(pokemonRepository);
   const updatePokemonUseCase = new UpdatePokemonUseCase(
@@ -23,6 +27,7 @@ export function makePokemonController(): PokemonController {
     trainerRepository,
   );
   const deletePokemonUseCase = new DeletePokemonUseCase(pokemonRepository);
+  const searchPokeApiUseCase = new SearchPokeApiUseCase(pokeAxiosGateway);
 
   return new PokemonController(
     listPokemonsUseCase,
@@ -30,5 +35,6 @@ export function makePokemonController(): PokemonController {
     getPokemonByIdUseCase,
     updatePokemonUseCase,
     deletePokemonUseCase,
+    searchPokeApiUseCase,
   );
 }

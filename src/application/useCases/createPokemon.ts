@@ -4,6 +4,7 @@ import { ITrainerRepository } from '@domain/repositories/trainer.repository';
 import { ConflictError } from '@domain/errors/conflict-error';
 import { UnprocessableError } from '@domain/errors/unprocessable-error';
 import { NotFoundError } from '@domain/errors/not-found-error';
+import { PokemonExternalGateway } from '@domain/gateways/pokemon-external-gateway';
 
 interface CreatePokemonDTO {
   id: string;
@@ -23,6 +24,7 @@ export class CreatePokemonUseCase {
   constructor(
     private PokemonRepository: IPokemonRepository,
     private TrainerRepository: ITrainerRepository,
+    private readonly pokeExternalGateway: PokemonExternalGateway,
   ) {}
 
   async execute(data: CreatePokemonDTO): Promise<Pokemon> {
@@ -31,6 +33,14 @@ export class CreatePokemonUseCase {
 
     if (PokemonAlreadyExists) {
       throw new ConflictError('Pokemon com este id já está cadastrado.');
+    }
+
+    const existsInExternalApi = await this.pokeExternalGateway.findByName(
+      data.name,
+    );
+
+    if (!existsInExternalApi) {
+      throw new NotFoundError('Pokemon com este nome');
     }
 
     if (!Object.values(pokemonType).includes(data.type1 as pokemonType)) {
